@@ -31,7 +31,7 @@ class User(db.Model):
 
 
 def getPasshashFromEmail(email):
-    return User.query.filter_by(mail=email).first()
+    return User.query.filter_by(mail=email).first().pass_hash
 
 
 

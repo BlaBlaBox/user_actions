@@ -30,6 +30,10 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
 
 
+def getPasshashFromEmail(email):
+    return User.query.filter_by(mail=email).first()
+
+
 
 
 db.create_all()

@@ -1,11 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date, datetime
+from config import app
 
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://blablabox:passw@localhost:5432/authentication'
-app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
 
 
@@ -28,6 +25,25 @@ class User(db.Model):
     register_date = db.Column(db.DateTime, default=(datetime.now()).strftime("%Y-%m-%d %H:%M:%S"))
     is_active = db.Column(db.Boolean, default=True)
     is_admin = db.Column(db.Boolean, default=False)
+
+
+def signUp(name, surname, gender, dob, username, pass_hash, email):
+    new_person = Person(firstname=name, surname=surname, gender=gender, dob=dob)
+    
+    try:
+        db.session.add(new_person)
+        db.session.commit()
+    except:
+        return
+    
+    p_id = new_person.person_id
+    new_user = User(person_id=p_id, username=username, pass_hash=pass_hash, mail=email)
+    
+    try:
+        db.session.add(new_user)
+        db.session.commit()
+    except:
+        return
 
 
 def getPasshashFromEmail(email):

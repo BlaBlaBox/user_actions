@@ -1,11 +1,12 @@
 from flask import Flask, jsonify, request, abort
-from passlib.hash import pbkdf2_sha256
+from passlib.hash import pbkdf2_sha256 as hasher
 from datetime import datetime
 from flask_httpauth import HTTPBasicAuth
+from login import signUp
+from datetime import date, datetime
+from config import app
+
 auth = HTTPBasicAuth()
-
-app = Flask(__name__)
-
 
 @app.errorhandler(404)
 def not_found(error):
@@ -28,7 +29,7 @@ def login():
    
     print(request.json['email']) # TODO: You will use it for taking the password from db
     sqled_password = 'myPassword'
-    hashed_password_from_db = pbkdf2_sha256.hash(sqled_password) # TODO: Change this with sql
+    hashed_password_from_db = hasher.hash(sqled_password) # TODO: Change this with sql
     user_id = 15 # TODO: Get ID
 
     # If password is same
@@ -38,10 +39,17 @@ def login():
         return jsonify({'result': 'Wrong password or email'}), 400 # Password does not match
 
 @app.route('/user/register', methods=['POST'])
-@auth.login_required
+# @auth.login_required
 def register():
     if not request.json:
         return jsonify({ 'error' : 'Your request is not JSON' }), 400
+
+    stri = hasher.hash("passw")
+    datestr = "1997-01-01"
+
+    signUp("ahmed", "kul", "M", datetime.strptime(datestr, "%Y-%m-%d"), "ahome2", stri, "ahmed2@deneme.com")
+
+    return jsonify({'error' : 'calismiyor'}), 200
 
     # TODO: Send these to the db
     name = request.json['name']

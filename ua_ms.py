@@ -29,7 +29,7 @@ def internal_server_error(err):
     return jsonify({'error' : 'Internal server error'}), 500
 
 @app.errorhandler(503)
-def service_unavailable():
+def service_unavailable(err):
     return jsonify({'error' : 'Service unavailable'}), 503
 
 

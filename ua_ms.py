@@ -138,7 +138,7 @@ def user_get(user_id):
     user_result = getUser(user_id)
     print(user_result)
     print(type(user_result))
-    user_json = user_result.json()
+    user_json = user_result.content
     print(user_json)
     print(type(user_json))
     if user_json["result"] != 'Success':

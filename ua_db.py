@@ -100,7 +100,7 @@ def getUser(user_id):
     user = User.query.filter_by(user_id=user_id).first()
     if user is None:
         return jsonify({ 'result': 'User cannot be found' })
-    return jsonify({ 'result': 'Success', 'user': jsonify_user_model(user)})
+    return jsonify(**{ 'result': 'Success', 'user': jsonify_user_model(user)})
 
 
 def changeActiveState(user_id):

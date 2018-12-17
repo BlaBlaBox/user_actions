@@ -135,12 +135,12 @@ def user_get_all():
 @app.route('/user/get/<int:user_id>', methods=['GET'])
 # @auth.login_required
 def user_get(user_id):
-    user_result = getUser(user_id)
+    user = getUser(user_id)
 
-    if user_result["result"] != 'Success':
+    if user is None:
         return jsonify({'result': 'User cannot be found on database'}), 503
 
-    return user_result, 200
+    return jsonify(result='Success', user=user), 200
 
 
 #######TODO##########

@@ -4,6 +4,8 @@ from ua_config import app
 
 db = SQLAlchemy(app)
 
+#db.drop_all()
+
 
 class Person(db.Model):
 

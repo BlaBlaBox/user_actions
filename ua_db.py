@@ -1,4 +1,5 @@
 from datetime import datetime
+from flask import jsonify
 from ua_config import db
 
 #db.drop_all()
@@ -24,9 +25,17 @@ class User(db.Model):
     is_active = db.Column(db.Boolean, default=True)
     is_admin = db.Column(db.Boolean, default=False)
 
-    def __init__(self, **kwargs):
-        self.__dict__ = self
-        super().__init__(**kwargs)
+
+def jsonify_user_model(obj):
+
+    return {'user_id': obj.user_id, 'person_id': obj.person_id, 'username': obj.username, 'passhash': obj.pass_hash, 
+            'email': obj.mail, 'reg_date': obj.register_date, 'active': obj.is_active,
+            'admin': obj.is_admin}
+
+def jsonify_person_model(obj):
+
+    return {'person_id': obj.person_id, 'name': obj.firstname, 'surname': obj.surname,
+            'gender': obj.gender, 'dob': obj.dob}
 
 
 def add_person(name, surname, gender, dob):
@@ -46,9 +55,6 @@ def signUp(name, surname, gender, dob, username, pass_hash, email):
     db.session.commit()
     return new_user
 
-
-def getPasshashFromEmail(email):
-    return User.query.filter_by(mail=email).first().pass_hash
 
 
 def checkUsername(username):
@@ -91,7 +97,10 @@ def getAllUsers():
 
 
 def getUser(user_id):
-    return User.query.filter_by(user_id=user_id).first()
+    user = User.query.filter_by(user_id=user_id).first()
+    if user is None:
+        return jsonify({ 'result': 'User cannot be found' })
+    return jsonify({ 'result': 'Success', 'user': jsonify_user_model(user)})
 
 
 def changeActiveState(user_id):

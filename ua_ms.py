@@ -1,7 +1,7 @@
 from flask import jsonify, request, abort
 from flask_httpauth import HTTPBasicAuth
 from passlib.hash import pbkdf2_sha256 as hasher
-from ua_db import signUp, updateUser, changeActiveState, getPassHash, getAllUsers, getUser, checkMail, checkUsername
+from ua_db import signUp, updateUser, changeActiveState, getPassHash, getAllUsers, getUser, checkMail, checkUsername, jsonify_user_model
 from ua_config import app
 
 
@@ -122,30 +122,25 @@ def user_get_all():
     users_json = []
 
     for user_obj in all_users:
-        user_dict = user_obj.__dict__
-        user_dict.pop('_sa_instance_state')
-        users_json.append(user_dict)
+        users_json.append(jsonify_user_model(user_obj))
 
     if users_json:
         return jsonify({'result': 'Success', 'users' : users_json}), 200
-    return abort(500)
+    return abort(503)
 
 
 # Get spesific user
 @app.route('/user/get/<int:user_id>', methods=['GET'])
 # @auth.login_required
 def user_get(user_id):
-    user_obj = getUser(user_id)
-    if user_obj is not None:
+    user_result = getUser(user_id)
+    if user_result["result"] != 'Success':
         return jsonify({'result': 'User cannot be found on database'}), 503
 
-    user_dict = user_obj.__dict__
-    user_dict.pop('_sa_instance_state')
-
-    return jsonify({'result': 'Success', 'user': user_dict}), 200
+    return user_result, 200
 
 
-
+#######TODO##########
 @app.route('/user/de-activate', methods=['POST'])
 @auth.login_required
 def user_activate():

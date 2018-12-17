@@ -160,6 +160,16 @@ def verify_password(username, password):
     return False
 
 
+'''
+def initialize(url):
+    with dbapi2.connect(url) as connection:
+        with connection.cursor() as cursor:
+            for statement in INIT_STATEMENTS:
+                print("SQL Run:", statement)
+                cursor.execute(statement)
+'''
+
 
 if __name__ == '__main__':
+    app.config.from_object('config')
     app.run(debug=True, port=8000)

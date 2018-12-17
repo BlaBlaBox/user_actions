@@ -1,8 +1,5 @@
 from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
-from ua_config import app
-
-db = SQLAlchemy(app)
+from ua_manage import app, db
 
 #db.drop_all()
 

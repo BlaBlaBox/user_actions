@@ -88,8 +88,8 @@ def updateUser(user_id, name, surname, gender, dob, username, pass_hash, email):
 def getUserByMailOrUsername(uname_mail, is_mail):
     user = User.query.filter_by(mail=uname_mail).first() if is_mail else User.query.filter_by(username=uname_mail).first()
     if user:
-        return jsonify({'result': 'Success', 'user': jsonify_user_model(user)})
-    return jsonify({'result': 'User cannot be found in database'})
+        return jsonify_user_model(user)
+    return None
 
 
 def getAllUsers():

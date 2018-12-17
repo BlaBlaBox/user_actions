@@ -45,13 +45,12 @@ def login():
     if '@' in uname_mail:
         is_mail = True
 
-    response = getUserByMailOrUsername(uname_mail, is_mail)
-    if response["result"] == 'Success':
-        user_obj = response["user"]
-    else:
+    user_obj = getUserByMailOrUsername(uname_mail, is_mail)
+    
+    if user_obj is None:
         return abort(503)
 
-    if hasher.verify(request.json['password'], user_obj.pass_hash):
+    if hasher.verify(request.json['password'], user_obj["pass_hash"]):
         return jsonify({'result': 'Success', 'user': user_obj}), 200 # Password matches
 
     return jsonify({'result': 'Wrong password or email'}), 400 # Password does not match

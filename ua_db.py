@@ -80,9 +80,10 @@ def updateUser(user_id, name, surname, gender, dob, username, pass_hash, email):
 
 
 def getPassHash(uname_mail, is_mail):
-    if is_mail:
-        return User.query.filter_by(mail=uname_mail).first().pass_hash
-    return User.query.filter_by(username=uname_mail).first().pass_hash
+    user = User.query.filter_by(mail=uname_mail).first() if is_mail else User.query.filter_by(username=uname_mail).first()
+    if user:
+        return user.pass_hash
+    return None
 
 
 def getAllUsers():

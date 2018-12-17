@@ -56,12 +56,7 @@ def checkUsername(username):
 
 
 def checkMail(email):
-    result = User.query.filter_by(mail=email).first()
-    if result:
-        print(result)
-        return result
-    print("None is returned from DB")
-    return result
+    return User.query.filter_by(mail=email).first()
 
 
 def updateUser(user_id, name, surname, gender, dob, username, pass_hash, email):

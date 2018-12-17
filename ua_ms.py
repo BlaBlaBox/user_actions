@@ -69,10 +69,10 @@ def register():
     password = request.json['password']
     email = request.json['email']
 
-    if not checkMail(email):
+    if checkMail(email):
         return jsonify({'result': 'Email is taken'}), 400
 
-    if not checkUsername(username):
+    if checkUsername(username):
         return jsonify({'result': 'Username is taken'}), 400
 
     pass_hash = hasher.hash(password)
@@ -99,10 +99,10 @@ def user_update():
     password = request.json['password']
     email = request.json['email']
 
-    if checkMail(email) is not None:
+    if checkMail(email):
         return jsonify({'result': 'Email is taken'}), 400
 
-    if checkUsername(username) is not None:
+    if checkUsername(username):
         return jsonify({'result': 'Username is taken'}), 400
 
     pass_hash = hasher.hash(password)

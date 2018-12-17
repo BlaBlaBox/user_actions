@@ -28,6 +28,10 @@ def not_found():
 def internal_server_error():
     return jsonify({'error' : 'Internal server error'}), 500
 
+@app.errorhandler(503)
+def service_unavailable():
+    return jsonify({'error' : 'Service unavailable'}), 503
+
 
 @app.route('/user/login', methods=['POST'])
 # @auth.login_required
@@ -41,10 +45,15 @@ def login():
     if '@' in uname_mail:
         is_mail = True
 
-    if hasher.verify(request.json['password'], getPassHash(uname_mail, is_mail)):
+    pass_hash = getPassHash(uname_mail, is_mail)
+    if pass_hash is None:
+        return abort(503)
+
+    if hasher.verify(request.json['password'], pass_hash):
         return jsonify({'result': 'Success', 'id': uname_mail}), 200 # Password matches
 
     return jsonify({'result': 'Wrong password or email'}), 400 # Password does not match
+
 
 @app.route('/user/register', methods=['POST'])
 # @auth.login_required
@@ -70,9 +79,10 @@ def register():
     new_user = signUp(name, surname, gender, dob, username, pass_hash, email)
 
     if not new_user:
-        return abort(500)
+        return abort(503)
 
     return jsonify({'result': 'Success', 'id': new_user.user_id}), 200
+
 
 @app.route('/user/update', methods=['POST'])
 @auth.login_required
@@ -101,6 +111,7 @@ def user_update():
         return abort(500)
 
     return jsonify({'result': 'Success', 'id' : updated_user.user_id}), 200
+
 
 # Get all users
 @app.route('/user/get', methods=['GET'])
@@ -160,15 +171,6 @@ def verify_password(username, password):
         return True
     return False
 
-
-'''
-def initialize(url):
-    with dbapi2.connect(url) as connection:
-        with connection.cursor() as cursor:
-            for statement in INIT_STATEMENTS:
-                print("SQL Run:", statement)
-                cursor.execute(statement)
-'''
 
 
 if __name__ == '__main__':

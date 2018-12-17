@@ -127,7 +127,7 @@ def user_get_all():
         users_json.append(jsonify_user_model(user_obj))
 
     if users_json:
-        return jsonify({'result': 'Success', 'users' : users_json}), 200
+        return jsonify(result='Success', users=users_json), 200
     return abort(503)
 
 
@@ -143,7 +143,7 @@ def user_get(user_id):
     return jsonify(result='Success', user=user), 200
 
 
-#######TODO##########
+#######TODO##########JSON###########
 @app.route('/user/de-activate', methods=['POST'])
 @auth.login_required
 def user_activate():

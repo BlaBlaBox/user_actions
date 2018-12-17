@@ -46,7 +46,7 @@ def login():
         is_mail = True
 
     user_obj = getUserByMailOrUsername(uname_mail, is_mail)
-    
+
     if user_obj is None:
         return abort(503)
 

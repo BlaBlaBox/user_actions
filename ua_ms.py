@@ -1,3 +1,4 @@
+import json
 from flask import jsonify, request, abort
 from flask_httpauth import HTTPBasicAuth
 from passlib.hash import pbkdf2_sha256 as hasher
@@ -135,10 +136,11 @@ def user_get_all():
 # @auth.login_required
 def user_get(user_id):
     user_result = getUser(user_id)
-    if user_result["result"] != 'Success':
+    user_json = user_result.json()
+    if user_json["result"] != 'Success':
         return jsonify({'result': 'User cannot be found on database'}), 503
 
-    return user_result, 200
+    return user_json, 200
 
 
 #######TODO##########

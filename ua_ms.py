@@ -136,7 +136,11 @@ def user_get_all():
 # @auth.login_required
 def user_get(user_id):
     user_result = getUser(user_id)
+    print(user_result)
+    print(type(user_result))
     user_json = user_result.json()
+    print(user_json)
+    print(type(user_json))
     if user_json["result"] != 'Success':
         return jsonify({'result': 'User cannot be found on database'}), 503
 

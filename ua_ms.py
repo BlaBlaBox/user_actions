@@ -1,7 +1,7 @@
 from flask import jsonify, request, abort
 from flask_httpauth import HTTPBasicAuth
 from passlib.hash import pbkdf2_sha256 as hasher
-from ua_db import signUp, updateUser, changeActiveState, getPassHash, getAllUsers, getUser, checkMail, checkUsername, jsonify_user_model
+from ua_db import signUp, updateUser, changeActiveState, getUserByMailOrUsername, getAllUsers, getUser, checkMail, checkUsername, jsonify_user_model
 from ua_config import app
 
 
@@ -45,12 +45,14 @@ def login():
     if '@' in uname_mail:
         is_mail = True
 
-    pass_hash = getPassHash(uname_mail, is_mail)
-    if pass_hash is None:
+    response = getUserByMailOrUsername(uname_mail, is_mail)
+    if response["result"] == 'Success':
+        user_obj = response["user"]
+    else:
         return abort(503)
 
-    if hasher.verify(request.json['password'], pass_hash):
-        return jsonify({'result': 'Success', 'id': uname_mail}), 200 # Password matches
+    if hasher.verify(request.json['password'], user_obj.pass_hash):
+        return jsonify({'result': 'Success', 'user': user_obj}), 200 # Password matches
 
     return jsonify({'result': 'Wrong password or email'}), 400 # Password does not match
 

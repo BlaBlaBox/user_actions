@@ -28,7 +28,7 @@ class User(db.Model):
 
 def jsonify_user_model(obj):
 
-    return {'user_id': obj.user_id, 'person_id': obj.person_id, 'username': obj.username, 'passhash': obj.pass_hash, 
+    return {'user_id': obj.user_id, 'person_id': obj.person_id, 'username': obj.username, 'pass_hash': obj.pass_hash, 
             'email': obj.mail, 'reg_date': obj.register_date, 'active': obj.is_active,
             'admin': obj.is_admin}
 
@@ -85,11 +85,11 @@ def updateUser(user_id, name, surname, gender, dob, username, pass_hash, email):
     return user_obj
 
 
-def getPassHash(uname_mail, is_mail):
+def getUserByMailOrUsername(uname_mail, is_mail):
     user = User.query.filter_by(mail=uname_mail).first() if is_mail else User.query.filter_by(username=uname_mail).first()
     if user:
-        return user.pass_hash
-    return None
+        return jsonify({'result': 'Success', 'user': jsonify_user_model(user)})
+    return jsonify({'result': 'User cannot be found in database'})
 
 
 def getAllUsers():

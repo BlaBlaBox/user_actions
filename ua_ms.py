@@ -9,23 +9,23 @@ auth = HTTPBasicAuth()
 
 
 @app.errorhandler(400)
-def bad_request():
+def bad_request(err):
     return jsonify({'error': 'Your request doesn\'t contain JSON'}), 400
 
 @auth.error_handler
-def unauthorized():
+def unauthorized(err):
     return jsonify({'error': 'Unauthorized access'}), 401
 
 @app.errorhandler(403)
-def forbidden():
+def forbidden(err):
     return jsonify({'error': 'Forbidden!'}), 403
 
 @app.errorhandler(404)
-def not_found():
+def not_found(err):
     return jsonify({'error': 'Not found'}), 404
 
 @app.errorhandler(500)
-def internal_server_error():
+def internal_server_error(err):
     return jsonify({'error' : 'Internal server error'}), 500
 
 @app.errorhandler(503)

@@ -119,13 +119,14 @@ def user_get_all():
         return jsonify({'result': 'Success', 'users' : users_json}), 200
     return abort(500)
 
+
 # Get spesific user
 @app.route('/user/get/<int:user_id>', methods=['GET'])
 # @auth.login_required
 def user_get(user_id):
     user_obj = getUser(user_id)
     if user_obj is not None:
-        return jsonify({'result': 'User cannot be found on database'}), 204
+        return jsonify({'result': 'User cannot be found on database'}), 503
 
     user_dict = user_obj.__dict__
     user_dict.pop('_sa_instance_state')
@@ -171,5 +172,5 @@ def initialize(url):
 
 
 if __name__ == '__main__':
-    app.config.from_object('config')
+    app.config.from_object('ua_config')
     app.run(debug=True, port=8000)

@@ -1,5 +1,5 @@
 from datetime import datetime
-from ua_manage import app, db
+from ua_config import db
 
 #db.drop_all()
 

@@ -50,11 +50,12 @@ def signUp(name, surname, gender, dob, username, pass_hash, email):
     new_person = add_person(name, surname, gender, dob)
     p_id = new_person.person_id
     admin = User.query.filter_by(user_id=1).first()
+    print(admin)
     new_user = None
     if admin != None:
         new_user = User(person_id=p_id, username=username, pass_hash=pass_hash, mail=email)
     else:
-        new_user = User(person_id=p_id, username=username, pass_hash=pass_hash, mail=email,ise_admin=True)
+        new_user = User(person_id=p_id, username=username, pass_hash=pass_hash, mail=email,is_admin=True)
 
     db.session.add(new_user)
     db.session.commit()

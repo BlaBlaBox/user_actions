@@ -1,5 +1,4 @@
 from datetime import datetime
-from flask import jsonify
 from ua_config import db
 
 #db.drop_all()
@@ -52,10 +51,10 @@ def signUp(name, surname, gender, dob, username, pass_hash, email):
     admin = User.query.filter_by(user_id=1).first()
     print(admin)
     new_user = None
-    if admin != None:
+    if admin is not None:
         new_user = User(person_id=p_id, username=username, pass_hash=pass_hash, mail=email)
     else:
-        new_user = User(person_id=p_id, username=username, pass_hash=pass_hash, mail=email,is_admin=True)
+        new_user = User(person_id=p_id, username=username, pass_hash=pass_hash, mail=email, is_admin=True)
 
     db.session.add(new_user)
     db.session.commit()

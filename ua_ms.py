@@ -1,19 +1,14 @@
-import json
 from flask import jsonify, request, abort
-from flask_httpauth import HTTPBasicAuth
 from passlib.hash import pbkdf2_sha256 as hasher
-from ua_db import signUp, updateUser, changeActiveState, getUserByMailOrUsername, getAllUsers, getUser, checkMail, checkUsername, jsonify_user_model
+from ua_db import signUp, updateUser, getUserByMailOrUsername, getAllUsers, getUser, checkMail, checkUsername, jsonify_user_model
 from ua_config import app
-
-
-auth = HTTPBasicAuth()
 
 
 @app.errorhandler(400)
 def bad_request(err):
     return jsonify({'error': 'Your request doesn\'t contain JSON'}), 400
 
-@auth.error_handler
+@app.errorhandler(401)
 def unauthorized(err):
     return jsonify({'error': 'Unauthorized access'}), 401
 
@@ -34,8 +29,9 @@ def service_unavailable(err):
     return jsonify({'error' : 'Service unavailable'}), 503
 
 
+
+
 @app.route('/user/login', methods=['POST'])
-# @auth.login_required
 def login():
     if not request.json:
         return abort(400)
@@ -58,7 +54,6 @@ def login():
 
 
 @app.route('/user/register', methods=['POST'])
-# @auth.login_required
 def register():
     if not request.json:
         return abort(400)
@@ -87,7 +82,6 @@ def register():
 
 
 @app.route('/user/update', methods=['POST'])
-@auth.login_required
 def user_update():
     if not request.json:
         return abort(400)
@@ -117,7 +111,6 @@ def user_update():
 
 # Get all users
 @app.route('/user/get', methods=['GET'])
-#@auth.login_required
 def user_get_all():
 
     all_users = getAllUsers()
@@ -133,7 +126,6 @@ def user_get_all():
 
 # Get spesific user
 @app.route('/user/get/<int:user_id>', methods=['GET'])
-# @auth.login_required
 def user_get(user_id):
     user = getUser(user_id)
 
@@ -141,33 +133,6 @@ def user_get(user_id):
         return jsonify({'result': 'User cannot be found on database'}), 503
 
     return jsonify(result='Success', user=user), 200
-
-
-#######TODO##########JSON###########
-@app.route('/user/de-activate', methods=['POST'])
-@auth.login_required
-def user_activate():
-    is_admin = request.authorization
-    if not is_admin:
-        return abort(401)
-
-    user_account_id = request.json['id']
-
-    db_result = changeActiveState(user_account_id)
-    if db_result is None:
-        return abort(500)
-
-    return jsonify({'result': 'Success', 'is_active' : db_result}), 200
-
-
-
-# Validate the admin signin ##################TODO##########################
-@auth.verify_password
-def verify_password(username, password):
-    # TODO: Change check if is admin in the database or not.
-    if username == 'admin' and password == 'asdqwe123':
-        return True
-    return False
 
 
 

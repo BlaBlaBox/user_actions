@@ -1,5 +1,7 @@
-Flask>=1.0
+Flask>=1.0.2
 Flask-SQLAlchemy>=2.3.2
-passlib>=1.7.1
+psycopg2-binary>=2.7.6.1
 gunicorn>=19.9
-psycopg2>=2.7.6.1
+IMDbPY>=6.6
+coverage>=4.5.2
+pytest>=4.0.2

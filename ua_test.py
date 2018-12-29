@@ -1,17 +1,16 @@
 import requests
-import pytest
 import random
 import string
 
 
-# Usage: pytest -q test.py
+# Usage: pytest ua_test.py
 
 
 class UserAction():
-    base_url = 'https://blablabox-auth.herokuapp.com'
+    # base_url = 'https://blablabox-auth.herokuapp.com'
 
     # For local testing
-    # base_url = 'http://127.0.0.1:8000'
+    base_url = 'http://127.0.0.1:8000'
 
     # The test function for getting all users
     def get_all_user(self, required_status):
